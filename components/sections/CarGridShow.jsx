@@ -115,7 +115,7 @@ const CarGridShow = () => {
 
     return (
         <div className='flex items-start gap-6 px-32 w-full'>
-            <div className="w-72 self-stretch rounded-xl bg-white px-4 tz-shadow tz-border-gray-1">
+            <div className="w-80 self-stretch rounded-xl bg-white px-4 tz-shadow tz-border-gray-1">
                 <div className="flex justify-between items-center w-full py-2 mb-8 tz-border-bottom-1 tz-bg-gradient">
                     <div className="font-medium tz-text-dark">Filter</div>
                     <Link href="" className="flex items-center gap-1 tz-text-orange-1">
@@ -150,12 +150,12 @@ const CarGridShow = () => {
                         <div className="flex items-center justify-between self-stretch">
                             <div className="flex items-center justify-center px-3 py-1 bg-white rounded tz-border-light-3">
                                 <span className="text-xs tz-text-gray">NGN</span>
-                                <input type="number" name="" size="5" onChange={(e) => setMinValue(e.target.value)} value={minValue} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-xs outline-none h-4 px-1 border-0 focus:ring-0 tz-text-gray" />
+                                <input type="number" name="" size="5" onChange={(e) => setMinValue(e.target.value)} value={minValue} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-xs outline-none w-12 h-4 px-1 border-0 focus:ring-0 tz-text-gray" />
                             </div>
                             <div className="w-4 h-[2px] tz-bg-light-1"></div>
                             <div className="flex items-center justify-center px-3 py-1 bg-white rounded tz-border-light-3">
                                 <span className="text-xs tz-text-gray">NGN</span>
-                                <input type="number" name="" size="5" onChange={(e) => setMaxValue(e.target.value)} value={maxValue} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-xs outline-none h-4 px-1 border-0 focus:ring-0 tz-text-gray" />
+                                <input type="number" name="" size="5" onChange={(e) => setMaxValue(e.target.value)} value={maxValue} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-xs outline-none w-12 h-4 px-1 border-0 focus:ring-0 tz-text-gray" />
                             </div>
                         </div>
                     </div>

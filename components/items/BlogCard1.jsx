@@ -14,12 +14,12 @@ const BlogCard1 = ({image, title, description}) => {
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
     return (
-        <div className="flex flex-col items-center gap-5">
+        <div className="flex flex-col items-center gap-5 w-96 h-64">
             <div>
-                <Image src={image} alt="logo icon" width={304} height={200} className="rounded-xl" />
+                <Image src={image} alt="logo icon" width={384} height={256} className="rounded-xl" />
             </div>
-            <div className="flex flex-col items-center gap-4">
-                <h4 className="text-2xl font-medium tz-text-dark">{title}</h4>
+            <div className="flex flex-col items-center self-stretch gap-2">
+                <h4 className="self-stretch text-2xl font-medium tz-text-dark">{title}</h4>
                 <p className="text-base font-normal tz-text-gray">{description}</p>
             </div>
         </div>

@@ -4,11 +4,14 @@ import React, { useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 
+// Third party components
+import { Modal } from 'flowbite';
+
 // Custom components
 import Button1 from '@/components/items/Button1';
 // import isMobile from '@/components/helpers/isMobile'
 
-const Login = () => {
+const Login = ({isOpen=false}) => {
     const [isVisible, setIsVisible] = useState(false);
     
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";

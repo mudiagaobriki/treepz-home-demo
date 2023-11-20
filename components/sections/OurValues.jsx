@@ -4,9 +4,6 @@ import React from 'react';
 import Image from "next/image";
 import Link from "next/link";
 
-// Custom components
-import Card4 from '@/components/items/Card4';
-import GuestHost from '@/components/items/GuestHost';
 // import isMobile from '@/components/helpers/isMobile'
 
 const OurValues = () => {
@@ -14,12 +11,12 @@ const OurValues = () => {
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
     return (
-        <div className="pr-32">
-            <div className="flex justify-between items-start w-full py-20 pl-32 pr-20 m-20 relative tz-bg-light">
+        <div className="pr-32 w-full">
+            <div className="flex justify-between items-start w-full py-20 pl-32 pr-20 mb-20 relative tz-bg-light">
                 <div className="">
                     <div className="text-[2.5rem] font-medium tz-text-dark">OUR VALUES</div>
                     <div className="absolute left-0 bottom-0">
-                        <Image src="/assets/images/our-values.png" alt="logo icon" width={422} height={422} className="flex-shrink-0 rounded-xl" />
+                        <Image src="/assets/images/our-values.png" alt="logo icon" width={422} height={422} />
                     </div>
                 </div>
                 <div className="">
