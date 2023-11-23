@@ -270,7 +270,7 @@ const Page = () => {
                         </div>
                         <Button1 text="View open roles" url="" width="width2" />
                     </div>
-                    <Image src="/assets/images/team.png" alt="team" width={420} height={280} className="absolute bottom-0" />
+                    <Image src="/assets/images/team.png" alt="team" width={420} height={280} className="absolute bottom-0 opacity-30" />
                 </div>
             </div>
             <div className="my-40"></div>

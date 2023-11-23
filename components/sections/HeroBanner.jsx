@@ -15,8 +15,8 @@ const HeroBanner = ({bgImg, page}) => {
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
     return (
-        <div className="mb-20">
-            <div className={`flex items-center justify-center w-full h-[32.5rem] bg-cover bg-center bg-[url('/assets/images/airport-hero-section.png')]`}> 
+        <div className="w-full">
+            <div className={`flex items-center justify-center w-full h-[32.5rem] self-stretch bg-cover bg-center ${bgImg}`}> 
                 {page == 'vehicle-rentals' && <VehicleSearchBox />}
                 {page == 'airport-transfers' && <AirportSearchBox />}
                 {page == 'intercity-travels' && <IntercitySearchBox />}

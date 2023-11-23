@@ -569,6 +569,7 @@ const CarGridShow = () => {
 
     return (
         <div className='flex items-start gap-6 px-32 w-full'>
+            {/* FILTER BAR */}
             <div className="w-80 self-stretch rounded-xl bg-white px-4 tz-shadow tz-border-gray-1">
                 <div className="flex justify-between items-center w-full py-2 mb-8 tz-border-bottom-1 tz-bg-gradient">
                     <div className="font-medium tz-text-dark">Filter</div>
@@ -773,6 +774,7 @@ const CarGridShow = () => {
 
                 </div>
             </div>
+            {/* FILTER BAR END*/}
             <div className="flex flex-col items-start gap-10 w-full">
                 <div className="flex flex-col items-start gap-5">
                     <div className="text-3xl font-semibold tz-text-dark">{vehiclesData?.length} cars available</div>

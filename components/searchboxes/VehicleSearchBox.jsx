@@ -15,7 +15,7 @@ import {setFilterResult, setVehiclesListing} from "../../redux/features/marketpl
 import {fetchVehicleListing} from "../../services/dataservices/vehicleService";
 // import isMobile from '@/components/helpers/isMobile'
 
-const VehicleSearchBox = () => {
+const VehicleSearchBox = (marketPlace=false) => {
   const [selectedPickDate, setSelectedPickDate] = useState(new Date());
   const [selectedPickTime, setSelectedPickTime] = useState(new Date());
   const [selectedDropDate, setSelectedDropDate] = useState(new Date());
@@ -42,21 +42,21 @@ const VehicleSearchBox = () => {
     }
 
     return (
-        <div className="flex flex-col justify-center items-center -space-y-3">
-            <div className="flex items-center gap-3 px-3 py-2 rounded-[3.75rem] tz-searchbox-buttons">
-                <a href="/airport-transfers" className="flex items-center gap-2 px-3 py-2 rounded-3xl">
-                    <Image src="/assets/images/plane-light.png" alt="" width={20} height={20} />
-                    <span className="text-white">Airport transfers</span>
-                </a>
-                <a href="" className="flex items-center gap-2 px-3 py-2 rounded-3xl bg-white">
-                    <Image src="/assets/images/car.png" alt="" width={20} height={20} />
-                    <span className="tz-text-dark">Vehicle rentals</span>
-                </a>
-                <a href="/inter-city-travels" className="flex items-center gap-2 px-3 py-2 rounded-3xl">
-                    <Image src="/assets/images/car-light.png" alt="" width={20} height={20} />
-                    <span className="text-white">Inter-city travels</span>
-                </a>
-            </div>
+        <div className={`flex flex-col justify-center items-center ${!marketPlace && '-space-y-3'}`}>
+            {!marketPlace && <div className="flex items-center gap-3 px-3 py-2 rounded-[3.75rem] tz-searchbox-buttons">
+                            <a href="/airport-transfers" className="flex items-center gap-2 px-3 py-2 rounded-3xl">
+                                <Image src="/assets/images/plane-light.png" alt="" width={20} height={20} />
+                                <span className="text-white">Airport transfers</span>
+                            </a>
+                            <a href="" className="flex items-center gap-2 px-3 py-2 rounded-3xl bg-white">
+                                <Image src="/assets/images/car.png" alt="" width={20} height={20} />
+                                <span className="tz-text-dark">Vehicle rentals</span>
+                            </a>
+                            <a href="/inter-city-travels" className="flex items-center gap-2 px-3 py-2 rounded-3xl">
+                                <Image src="/assets/images/car-light.png" alt="" width={20} height={20} />
+                                <span className="text-white">Inter-city travels</span>
+                            </a>
+                        </div>}
             <div className="flex flex-col items-start gap-4 rounded-2xl bg-white pt-6 pb-5 px-5">
                 <div className="flex items-center gap-4 self-stretch w-full">
                     <div className="flex items-center px-3 py-2 rounded-lg bg-white w-[30rem] tz-border-light-3">
@@ -124,12 +124,12 @@ const VehicleSearchBox = () => {
                         <Button1 text={"Search"} url={"#"} width={"[21.5rem]"} iconLeft={true} img={"/assets/images/search-line.png"} />
                     </div>
                 </div>
-                <div>
-                    <label className="flex items-center gap-2" for="workTravel">
-                        <input type="checkbox" name="" className="w-4 h-4 accent-[#F8B02B] focus:ring-2 focus:ring-[#F8B02B] rounded tz-text-orange-1 tz-checbox-border" id="workTravel" /> 
-                        <span className="text-sm tz-text-gray-3">I’m travelling for work</span>
-                    </label>
-                </div>
+                {!marketPlace && <div>
+                                    <label className="flex items-center gap-2" for="workTravel">
+                                        <input type="checkbox" name="" className="w-4 h-4 accent-[#F8B02B] focus:ring-2 focus:ring-[#F8B02B] rounded tz-text-orange-1 tz-checbox-border" id="workTravel" /> 
+                                        <span className="text-sm tz-text-gray-3">I’m travelling for work</span>
+                                    </label>
+                                </div>}
             </div>
         </div>
     );

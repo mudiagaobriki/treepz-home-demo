@@ -1,0 +1,26 @@
+#app {
+  margin-top: 40px;
+}
+
+.circle-background,
+.circle-progress {
+    fill: none;
+}
+
+.circle-progress {
+    stroke: rgb(151, 151, 151);
+    stroke-linecap: butt;
+    stroke-linejoin: butt;
+}
+
+.circle-center {
+    stroke:black;
+    stroke-width: 2 ;
+    fill:black;
+} 
+
+.circle-text {
+    font-size: 5px;
+    font-weight: bold;
+    fill: red;
+  }

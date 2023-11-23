@@ -24,7 +24,14 @@ const Page = () => {
     return (
         <div>
             <NavBar bgColor="#FFF" />
-            <HeroBanner bgImg={"/assets/images/pictures-on-hero-section.png"} page="vehicle-rentals" />
+            
+            <div className="flex flex-col items-start w-full -space-y-20">
+                <HeroBanner bgImg={"bg-[url('/assets/images/home-hero-head.png')]"} page="vehicle-rentals" />
+                <div className="px-20 w-full flex flex-col items-start gap-1">
+                    <h1 className="text-7xl font-medium text-white">Find a ride.</h1>
+                    <h1 className="text-7xl font-medium tz-text-dark">Drive your dream.</h1>
+                </div>
+            </div>
             <div className="my-20"></div>
             <CardSection1 />
             <div className="my-20"></div>

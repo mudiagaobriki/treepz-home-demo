@@ -20,12 +20,12 @@ const FaqsItem = ({question, title, description, faqsPage=false}) => {
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
     return (
-        <div className="w-[38.75rem]">
+        <div className={faqsPage ? "w-full" : "w-[38.75rem]"}>
             {faqsPage ? 
                 <div className={`w-full tz-border-top ${isHover && 'cursor-pointer'}`} onClick={toggleFaq}>
                     {isClick ?
                     <div className="flex flex-col items-start gap-4 self-stretch px-0 py-5">
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center w-full">
                             <h4 className="text-4xl font-medium tz-text-dark-1">{title}</h4>
                             <p><Image src="/assets/images/chevron-up-line.png" alt="arrow-up" width={32} height={32} /></p>
                         </div>
