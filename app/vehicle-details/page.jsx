@@ -73,7 +73,8 @@ const Page = () => {
                         setShowLoginModal(true)
                 }
                 else{
-                        alert('Fill the ride details on the reservation form below')
+                        setShowLoginModal(true)
+                        // alert('Fill the ride details on the reservation form below')
                 }
                 // alert("Clicked")
         }
@@ -245,7 +246,7 @@ const Page = () => {
                             amenities={selectedRide?.vehicle?.vehicleAmenities}
                 onReserve={actualHandleReserveClicked} ride={selectedRide}/>}
             <div className="my-20"></div>
-            <MapSection />
+            <MapSection ride={selectedRide} />
             <div className="mt-24 pt-16 pb-10 tz-bg-light">
                 <BreadCrumb links={["Rent a car", "Ikejah", "Mercedes", "Mercedes Mayback 20233"]} />
             </div>

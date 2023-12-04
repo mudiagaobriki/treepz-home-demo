@@ -68,7 +68,10 @@ const ReserveForm = ({onReserve, ride, hasError, price, localPrice}) => {
         apiKey:"AIzaSyDcpqQNbjIQasjqRriOGOYnnSQdAGOUvVs",
         onPlaceSelected: (place) => {
             console.log(place);
-        }
+        },
+        options: {
+        types: ["geocode", "establishment",],
+    }
     });
 
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3"; // h-[32.5rem]

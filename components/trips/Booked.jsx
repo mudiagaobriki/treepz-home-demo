@@ -1994,20 +1994,49 @@ const DUMMY_BOOKINGS = [
 
 const Booked = () => {
   const [bookings, setBookings] = useState([])
+  const [ongoing, setOngoing] = useState([])
+  const [pending, setPending] = useState([])
 
   const {currentUser, token, isLogin} = useSelector(state => state.auth)
   const bearerToken = token?.token;
   // console.log({currentUser, token, isLogin})
 
   useEffect(() => {
-    FetchUserBookings()
+    FetchOngoingRides()
         .then((res) => {
-          setBookings(res)
+          setOngoing(res)
         })
   },[])
 
-  const FetchUserBookings = async () => {
-    const url = `${BASE_URL}/order?id=30b928b0-185c-4b7a-b39a-1b7e2a04fbe4&populateHost=true`
+  useEffect(() => {
+    FetchPendingRides()
+        .then((res) => {
+          setPending(res)
+        })
+  },[])
+
+  // const FetchUserBookings = async () => {
+  //   const url = `${BASE_URL}/order?id=30b928b0-185c-4b7a-b39a-1b7e2a04fbe4&populateHost=true`
+  //
+  //   try {
+  //     const headers = {
+  //       Authorization: `Bearer ${bearerToken}`,
+  //     }
+  //     const res = await axios.get(url, {headers})
+  //     // console.log({res})
+  //
+  //     if (res?.status === 200) {
+  //       console.log("User Bookings: ", res?.data?.data)
+  //       return res?.data?.data
+  //     }
+  //   } catch (ex) {
+  //     console.log({ex})
+  //     alert("Invalid credentials. Please try again")
+  //   }
+  // }
+
+  const FetchOngoingRides = async () => {
+    const url = `${BASE_URL}/order?status=ongoing&checkedIn=true`
 
     try {
       const headers = {
@@ -2017,7 +2046,27 @@ const Booked = () => {
       // console.log({res})
 
       if (res?.status === 200) {
-        console.log("User Bookings: ", res?.data?.data)
+        console.log("Ongoing User Bookings: ", res?.data?.data)
+        return res?.data?.data
+      }
+    } catch (ex) {
+      console.log({ex})
+      alert("Invalid credentials. Please try again")
+    }
+  }
+
+  const FetchPendingRides = async () => {
+    const url = `${BASE_URL}/order?status=pending`
+
+    try {
+      const headers = {
+        Authorization: `Bearer ${bearerToken}`,
+      }
+      const res = await axios.get(url, {headers})
+      // console.log({res})
+
+      if (res?.status === 200) {
+        console.log("Pending User Bookings: ", res?.data?.data)
         return res?.data?.data
       }
     } catch (ex) {
