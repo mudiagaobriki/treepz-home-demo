@@ -1,89 +1,69 @@
-import React, { Fragment } from 'react'
+import React, { useState, useEffect } from "react";
+import { CircularProgressbar, CircularProgressbarWithChildren, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
-import './ProgressBar.css'
+export default function ProgressBar({minutes, seconds, color, background=true}) {
+    const [min, setMin] = useState(minutes);
+    const [sec, setSec] = useState(seconds);
+    const [progress, setProgress] = useState(0);
+    const [start, setStart] = useState(true);
+    const [count, setCount] = useState(0);
+    const amount = ((minutes * 60) + seconds) / 60; console.log(amount);
 
+    const colours = {
+        green: {color: "#3CC13B", background: "#E0F5E0", text: "text-[#3CC13B]"},
+        yellow: {color: "#F3BB1C", background: "#FDF3D8", text: "text-[#F3BB1C]"},
+        red: {color: "#B00020", background: "#FEECEC", text: "text-[#B00020]"},
+    };
 
-const ProgressBar = props => {
-
-let [sqSize, setSqSize] = React.useState(90)
-let [percentage, setPercentage] = React.useState(0)
-let [strokeWidth, setStrokeWidth] = React.useState(3)
-
-let [trigger, setTrigger] = React.useState(false)
-let [barIndex, setBarIndex] = React.useState(0)
-
-let bars = Array(props.bar).fill(1)
-let timer = 3000
-
-
-const barTriggerHandler = () => {
-    setTrigger(!trigger)
-}
-
-
-if (trigger) {
-    if (trigger) {
-        setTimeout(() => {
-            percentage < 99 ? setPercentage(percentage + 1) : setPercentage(0)
-
-            if (percentage === 99) {
-                 barIndex < bars.length - 1 ? setBarIndex(barIndex + 1) : setBarIndex(0)
+    useEffect(() => {
+        let x = sec, y = min;
+        setProgress((count / 60) / amount);
+        const interval = setInterval(() => {
+            if ((x === 0 && y === 0) || start === false) {
+                setStart(false);
+                return;
             }
+            setCount((count) => count + 1);
+            if (x < 1) {
+                setSec(59);
+                setMin(y - 1);
+            } else if (x < 60) {
+                --x;
+                setSec(x);
+            }
+                setProgress((count / 60) / amount);
+        }, 1000);
 
-        }, timer / 100);        
-    }
+        return () => {
+            clearInterval(interval);
+        };
+      }, [min, sec, start, progress]);
+
+    return (
+        <>
+            <div className="flex flex-col justify-center items-center">
+                <CircularProgressbarWithChildren
+                    className="w-52 h-52"
+                    background={background}
+                    strokeWidth={5}
+                    value={progress}
+                    maxValue={1}
+                    styles={buildStyles({
+                        pathTransitionDuration: 0.2,
+                        trailColor: colours[color].background,
+                        pathColor: colours[color].color,
+                        backgroundColor: colours[color].background,
+                    })}
+                >
+                    <div className="inline-flex flex-col items-center">
+                        <p className="text-center font-medium tz-text-dark-1">Time left</p>
+                        <h4 className={`text-center text-4xl font-medium ${colours[color].text}`}>
+                            {(min < 10 ? `0${min}` : min) + ":" + (sec < 10 ? `0${sec}` : sec)}
+                        </h4>
+                    </div>
+                </CircularProgressbarWithChildren>
+            </div>
+        </>
+    );
 }
-
-// SVG centers the stroke width on the radius, subtract out so circle fits in square
-const radius = (sqSize - strokeWidth) / 2;
-// Enclose cicle in a circumscribing square
-const viewBox = `0 0 ${sqSize} ${sqSize}`;
-// Arc length at 100% coverage is the circle circumference
-const dashArray = radius * Math.PI * 2;
-// Scale 100% coverage overlay with the actual percent
-const dashOffset = dashArray - dashArray * percentage / 100;
-// console.log(dashOffset)
-
-return (
-    <Fragment>
-        { bars.map((bar, i) => {
-            return <svg
-                        key={i}
-
-                        width={sqSize}
-                        height={sqSize}
-                        viewBox={viewBox}
-
-                        onClick={() => barTriggerHandler()}
-                    >
-                        { i === barIndex ?  
-                            <Fragment>
-                                <circle
-                                    className="circle-progress"
-                                    cx={sqSize / 2}
-                                    cy={sqSize / 2}
-                                    r={radius}
-                                    strokeWidth={`${strokeWidth}px`}
-                                    // Start progress marker at 12 O'Clock
-                                    transform={`rotate(-90 ${sqSize / 2} ${sqSize / 2})`}
-                                    style={{
-                                        strokeDasharray: dashArray,
-                                        strokeDashoffset: dashOffset
-                                    }} 
-                                /> 
-                            </Fragment>
-                        : null }
-                        <circle
-                            className="circle-center"
-                            cx="50%"
-                            cy="50%"
-                            r="3"
-                        /> 
-                        
-                    </svg>
-        }) }
-    </Fragment>
-);
-}
-
-export default ProgressBar

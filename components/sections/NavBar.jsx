@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 // Third party components
+import { Dropdown } from 'flowbite-react';
 // import {isMobile} from "react-device-detect";
 
 const NavBar = ({bgColor='white'}) => {
@@ -37,11 +38,24 @@ const NavBar = ({bgColor='white'}) => {
                             <p className="text-sm font-medium">NGN</p>
                         </div>
                     </div>
-                    
-                        <div className="flex items-center gap-2 py-2 px-3">
+                    <Dropdown 
+                        label="" 
+                        dismissOnClick={false} 
+                        renderTrigger={() => <div className="flex items-center gap-2 py-2 px-3">
                             <Image src="/assets/images/menu-line.png" alt="menu-line icon" width={20} height={20} />
                             <Image src="/assets/images/user-5-fill.png" alt="user-5-fill icon" width={20} height={20} />
-                        </div>
+                        </div>}
+                    >
+                                <Dropdown.Item>Dashboard</Dropdown.Item>
+                                <Dropdown.Item>Settings</Dropdown.Item>
+                                <Dropdown.Item>Earnings</Dropdown.Item>
+                                <Dropdown.Item>Sign out</Dropdown.Item>
+                            </Dropdown>
+                        {/*<div className="flex items-center gap-2 py-2 px-3">
+                                                    <Image src="/assets/images/menu-line.png" alt="menu-line icon" width={20} height={20} />
+                                                    <Image src="/assets/images/user-5-fill.png" alt="user-5-fill icon" width={20} height={20} />
+                                                    
+                                                </div>*/}
                     
                 </div>
             }   

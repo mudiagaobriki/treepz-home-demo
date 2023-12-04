@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,9 +9,12 @@ import NavBar from '@/components/sections/NavBar';
 import GuestHost from '@/components/items/GuestHost';
 import FaqsItem from '@/components/items/FaqsItem';
 import GetStartedSection from '@/components/sections/GetStartedSection';
+import ProgressBar from '@/components/modals/ProgressBar';
+import ReviewReservation from '@/components/modals/ReviewReservation';
 import Footer from '@/components/sections/Footer';
 
 const Page = () => {
+    const [modalOpen, setModalOpen] = useState(false);
 
     return (
         <div>
@@ -60,9 +63,20 @@ const Page = () => {
                 </div>
             </div>
             <div className="my-32"></div>
+            <div className="flex place-content-center">
+                {/*<ProgressBar minutes={0} seconds={59} color="red" background={false} />*/}
+                <button 
+                    onClick={() => setModalOpen(true)}
+                    className="flex py-3 px-6 justify-center items-center font-semibold w-60 rounded-lg bg-[#F8B02B] hover:bg-[#F8B02B]/80 tz-text-dark-1"
+                >
+                    Progress bar
+                </button>
+            </div>
+            <div className="my-32"></div>
             <div className="h-28 w-full tz-bg-light tz-border-top-3"></div>
             <GetStartedSection />
             <div className="h-28 w-full tz-bg-light"></div>
+            <ReviewReservation show={modalOpen} hideModal={() => setModalOpen(false)} />
             <Footer />
         </div>
     );
