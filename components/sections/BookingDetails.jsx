@@ -24,7 +24,7 @@ const BookingDetails = ({description="",amenities=[],
                 <div className="my-20"></div>
                 <VehicleFeatures amenities={amenities} />
                 <div className="my-20"></div>
-                <ReviewSection2 />
+                {/*<ReviewSection2 />*/}
                 <div className="my-20"></div>
             </div>
             <div>

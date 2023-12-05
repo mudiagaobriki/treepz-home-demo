@@ -26,7 +26,7 @@ import Button1 from "../../components/items/Button1";
 import {BASE_URL} from "../../public/assets/constants/constants";
 import axios from "axios";
 import {setCurrentUser} from "../../redux/features/authSlice";
-import VehicleImage from "../../components/sections/VehicleHost";
+import VehicleImage from "../../components/sections/VehicleImage";
 
 const Page = () => {
         const [userLocation, setUserLocation] = useState(null)
@@ -271,18 +271,6 @@ const Page = () => {
                         </div>
                 </div>
             <div className="my-20"></div>
-            <div className="px-32 flex justify-between items-start w-full">
-                <div className="flex flex-col items-start w-1/4 h-[27rem] gap-4 overflow-y-scroll">
-                    {/*<div className="w-full h-[12.5rem] rounded-tl-xl bg-cover bg-center bg-[url('/assets/images/benz-sm.png')] flex-shrink-0"></div>
-                    <div className="w-full h-[11.25rem] bg-cover bg-center bg-[url('/assets/images/benz-interior.png')] flex-shrink-0"></div>
-                    <div className="w-full h-5 bg-cover bg-center bg-[url('/assets/images/benz-part.png')]"></div>*/}
-                    <Image src="/assets/images/benz-sm.png" alt="" width={384} height={200} className="rounded-tl-xl" />
-                    <Image src="/assets/images/benz-interior.png" alt="" width={384} height={180} />
-                    <Image src="/assets/images/benz-interior.png" alt="" width={384} height={20} />
-                </div>
-                {/*<div className="w-2/3 h-[27rem] rounded-r-xl bg-cover bg-center bg-[url('/assets/images/benz-lg.png')]"></div>*/}
-                <Image src="/assets/images/benz-lg.png" alt="" width={800} height={440} className="rounded-r-xl" />
-            </div>
             <VehicleImage images={carImages} />
             <div className="my-20"></div>
                 {selectedRide && <BookingDetails description={selectedRide?.vehicle?.vehicleGuideLine}
