@@ -13,9 +13,10 @@ import Button1 from '@/components/items/Button1'
 import {useDispatch, useSelector} from "react-redux";
 import {setFilterResult, setVehiclesListing} from "../../redux/features/marketplaceSlice";
 import {fetchVehicleListing} from "../../services/dataservices/vehicleService";
+import {searchRentals} from "../../services/functions/filters";
 // import isMobile from '@/components/helpers/isMobile'
 
-const VehicleSearchBox = (marketPlace=false) => {
+const VehicleSearchBox = ({data,marketPlace=false}) => {
   const [selectedPickDate, setSelectedPickDate] = useState(new Date());
   const [selectedPickTime, setSelectedPickTime] = useState(new Date());
   const [selectedDropDate, setSelectedDropDate] = useState(new Date());
@@ -25,20 +26,28 @@ const VehicleSearchBox = (marketPlace=false) => {
 
   const dispatch = useDispatch();
 
-    // const { vehicles, isLoading, isError } = fetchVehicleListing();
-    // console.log({vehicles, isLoading, isError});
-    // let results = useSelector(state => state.marketplace?.filterResult)
-    let listings = useSelector(state => state.marketplace?.vehiclesListing)
-
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
     const handleSearch = () => {
-        if (toLocation === ""){
-            dispatch(setFilterResult(listings))
-        }
-        const availableRides = listings?.filter(el => (el?.isAvailable === true));
-        const carsInLocation = listings?.filter(el => el?.locationKeywords?.includes(toLocation?.toLowerCase()))
-        dispatch(setFilterResult(carsInLocation));
+        // if (toLocation === ""){
+        //     dispatch(setFilterResult(data))
+        // }
+        console.log({selectedPickDate})
+        let pDate = selectedPickDate
+        //format the selected pickup date
+        let year = pDate.toLocaleString("default", { year: "numeric" });
+        let month = pDate.toLocaleString("default", { month: "2-digit" });
+        let day = pDate.toLocaleString("default", { day: "2-digit" });
+
+        // Generate yyyy-mm-dd date string
+        let formattedDate = year + "-" + month + "-" + day;
+        console.log(formattedDate)
+        const availableRides = data?.filter(el => (el?.isAvailable === true));
+        console.log({availableRides})
+        // const carsInLocation = data?.filter(el => el?.locationKeywords?.includes(toLocation?.toLowerCase()))
+        const searchResults = searchRentals(availableRides,formattedDate)
+        console.log({searchResults})
+        dispatch(setFilterResult(searchResults));
     }
 
     return (
@@ -121,7 +130,7 @@ const VehicleSearchBox = (marketPlace=false) => {
                         </div>
                     </div>
                     <div>
-                        <Button1 text={"Search"} url={"#"} width={"[21.5rem]"} iconLeft={true} img={"/assets/images/search-line.png"} />
+                        <Button1 onClick={handleSearch} text={"Search"} submit={true} width={"[21.5rem]"} iconLeft={true} img={"/assets/images/search-line.png"} />
                     </div>
                 </div>
                 {!marketPlace && <div>

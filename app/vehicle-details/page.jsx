@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 
 // Third party components
 import { Modal } from 'flowbite';
@@ -22,16 +23,37 @@ import EmailOTP from '@/components/modals/EmailOTP';
 import SuccessCard from '@/components/modals/SuccessCard';
 import {useDispatch, useSelector} from "react-redux";
 import Button1 from "../../components/items/Button1";
+import {BASE_URL} from "../../public/assets/constants/constants";
+import axios from "axios";
+import {setCurrentUser} from "../../redux/features/authSlice";
+import VehicleImage from "../../components/sections/VehicleHost";
 
 const Page = () => {
         const [userLocation, setUserLocation] = useState(null)
+        const [showLoginModal, setShowLoginModal] = useState(false)
+        const [showSignupModal, setShowSignupModal] = useState(false)
+        const [showForgotModal, setShowForgotModal] = useState(false)
+        const [showOTPModal, setShowOTPModal] = useState(false)
+        const [showResetModal, setShowResetModal] = useState(false)
+        const [showSuccessCard, setShowSuccessCard] = useState(false)
+        const [carImages, setCarImages] = useState([])
+        const [hasReservationError, setHasReservationError] = useState(false)
 
         const dispatch = useDispatch()
+        const router = useRouter();
 
         const selectedRide = useSelector(state => state.marketplace.selectedRide)
+        const {currentUser, token} = useSelector(state => state.auth);
+        console.log({currentUser, token})
         console.log({selectedRide})
         const vehicleName = selectedRide?.vehicle?.vehicleMake?.name + " " + selectedRide?.vehicle?.vehicleModel?.name
         const vehicleYear = selectedRide?.vehicle?.vehicleYear
+
+        const bookingRef = useRef(null)
+
+        useEffect(() => {
+                setCarImages(selectedRide?.vehicle?.vehicleImages)
+        },[selectedRide])
 
         // get user location
         useEffect(() => {
@@ -46,10 +68,168 @@ const Page = () => {
                 }
         },[])
 
+        const handleReserveClicked = () => {
+                if (!currentUser){
+                        setShowLoginModal(true)
+                }
+                else{
+                        setShowLoginModal(true)
+                        // alert('Fill the ride details on the reservation form below')
+                }
+                // alert("Clicked")
+        }
+
+        const actualHandleReserveClicked = async (pd,pt,dd,dt,lc) => {
+                // console.log({pd,pt,dd,dt,lc})
+                await InitiateBooking(pt,dt,lc,selectedRide?.id)
+        }
+
+        const onReserveRide = async (pd,pt,dd,dt,lc) => {
+                // get date difference
+                let diff = new Date(dd) - new Date(pd)
+                diff = diff / (1000*3600)
+
+                console.log(diff)
+                await InitiateBooking(pd,dd,lc,selectedRide?.vehicle?.id)
+
+        }
+
+        const handleCloseModal = () => {
+                setShowLoginModal(false)
+        }
+
+        const handleCloseSignupModal = () => {
+                setShowSignupModal(false)
+        }
+
+        const handleCloseForgotModal = () => {
+                setShowForgotModal(false)
+        }
+
+        const handleCloseOTPModal = () => {
+                setShowOTPModal(false)
+        }
+
+        const handleCloseResetModal = () => {
+                setShowResetModal(false)
+        }
+
+        const handleCloseSuccessCard = () => {
+                setShowSuccessCard(false)
+                setShowLoginModal(true)
+        }
+
+        const handleSignupLinkClicked = () => {
+                setShowLoginModal(false)
+                setShowSignupModal(true)
+        }
+
+        const handleLoginLinkClicked = () => {
+                setShowLoginModal(true)
+                setShowSignupModal(false)
+        }
+
+        const handleForgotLinkClicked = () => {
+                setShowLoginModal(false)
+                setShowForgotModal(true)
+        }
+
+        const handleBackToLogin = () => {
+                setShowForgotModal(false)
+                setShowSignupModal(false)
+                setShowLoginModal(true)
+        }
+
+        const handleBackToForgotPassword = () => {
+                setShowForgotModal(true)
+                setShowOTPModal(false)
+        }
+
+        const handleShowEmailOTP = () => {
+                setShowForgotModal(false)
+                setShowOTPModal(true)
+        }
+
+        const handleShowNewPassword = () => {
+                setShowOTPModal(false)
+                setShowResetModal(true)
+        }
+
+        const handleShowNSuccessCard = () => {
+                setShowResetModal(false)
+                setShowSuccessCard(true)
+        }
+
+        const InitiateBooking = async (pt,dt,lc, vid) => {
+                const credentials = {
+                        listedVehicleId: vid,
+                        pickUpTime: pt,
+                        dropOffTime: dt,
+                        rentalType: 'daily',
+                        pickUpLocation: lc,
+                }
+
+                console.log({credentials})
+                // console.log({profileImage: profileImageUrl})
+                const url = `${BASE_URL}/order`
+
+                try {
+                        const headers = {
+                                Authorization: `Bearer ${token?.token}`,
+                        }
+
+                        const res = await axios.post(url, credentials, {headers})
+
+                        console.log({res})
+                        if (res?.status === 200) {
+                                // const currentUser = res?.data?.data?.user;
+                                // console.log({currentUser})
+                                // const token = res?.data?.data?.jwt;
+                                // dispatch(setCurrentUser({user: {...currentUser, firstName, lastName, phoneNumber }, loginToken: token}))
+                                // setInterval(() => window.location.reload(), 2000)
+                                // setShowSuccessModal(true)
+                        }
+                } catch (ex) {
+                        console.log({ex})
+                        alert("Invalid credentials. Please try again")
+                }
+        }
+
+        const GetPricing = async () => {
+                const credentials = {
+                        isPreview: true
+                }
+
+                console.log({credentials})
+                // console.log({profileImage: profileImageUrl})
+                const url = `${BASE_URL}/order/bc207831-79f8-49f0-b2ed-3562f45123a0/payment`
+
+                try {
+                        const headers = {
+                                Authorization: `Bearer ${token?.token}`,
+                        }
+
+                        const res = await axios.patch(url, credentials, {headers})
+
+                        console.log({res})
+                        if (res?.status === 200) {
+                                // const currentUser = res?.data?.data?.user;
+                                // console.log({currentUser})
+                                // const token = res?.data?.data?.jwt;
+                                // dispatch(setCurrentUser({user: {...currentUser, firstName, lastName, phoneNumber }, loginToken: token}))
+                                // setInterval(() => window.location.reload(), 2000)
+                                // setShowSuccessModal(true)
+                        }
+                } catch (ex) {
+                        console.log({ex})
+                        alert("Invalid credentials. Please try again")
+                }
+        }
+
     return (
         <div>
             <NavBar bgColor="#FFF" />
-            <div className="px-32 flex items-center gap-2 mt-14 mb-10 font-semibold tz-text-orange-1">
+            <div style={{cursor: 'pointer'}} onClick={() => router.back()} className="px-32 flex items-center gap-2 mt-14 mb-10 font-semibold tz-text-orange-1">
                 <Image src="/assets/images/arrow-go-back-fill.png" alt="rating-star" width={24} height={24} /> Go back
             </div>
                 <div className="flex justify-between items-start w-full px-32">
@@ -78,10 +258,11 @@ const Page = () => {
                                 </div>
                         </div>
                         <div className="flex flex-col items-start gap-4">
+                                <Link href="/account/profile">Profile Pages</Link>
                                 <div className="flex items-center gap-5">
                                         <Image src="/assets/images/heart-2-line.png" alt="logo icon" width={32} height={32} />
                                         <Image src="/assets/images/share-box-fill.png" alt="logo icon" width={32} height={32} />
-                                        <Button1 text="Reserve" url="" width={"56"} modalId={"signup-modal"} />
+                                        <Button1 onClick={handleReserveClicked} submit={true} text="Reserve" url="" width={"56"} />
                                 </div>
                                 <div className="flex items-center gap-2 p-2 justify-end w-full">
                                         <Image src="/assets/images/refund-fill.png" alt="logo icon" width={24} height={24} />
@@ -102,26 +283,35 @@ const Page = () => {
                 {/*<div className="w-2/3 h-[27rem] rounded-r-xl bg-cover bg-center bg-[url('/assets/images/benz-lg.png')]"></div>*/}
                 <Image src="/assets/images/benz-lg.png" alt="" width={800} height={440} className="rounded-r-xl" />
             </div>
+            <VehicleImage images={carImages} />
             <div className="my-20"></div>
-            <BookingDetails />
+                {selectedRide && <BookingDetails description={selectedRide?.vehicle?.vehicleGuideLine}
+                            amenities={selectedRide?.vehicle?.vehicleAmenities}
+                onReserve={actualHandleReserveClicked} ride={selectedRide}/>}
             <div className="my-20"></div>
-            <MapSection />
+            <MapSection ride={selectedRide} />
             <div className="mt-24 pt-16 pb-10 tz-bg-light">
                 <BreadCrumb links={["Rent a car", "Ikejah", "Mercedes", "Mercedes Mayback 20233"]} />
             </div>
             <LocationSection />
             <div className="pt-24 tz-bg-light"></div>
             <Footer />
-            <Signup />
-            <Login />
-            <NewPassword />
-            <ForgotPassword />
-            <EmailOTP numberOfDigits={5} />
+            <Signup isOpen={showSignupModal} closeModal={handleCloseSignupModal} onLoginPressed={handleLoginLinkClicked} />
+            <Login isOpen={showLoginModal} closeModal={handleCloseModal} onRegister={handleSignupLinkClicked}
+                   onForgotPassword={handleForgotLinkClicked} />
+            <NewPassword isOpen={showResetModal} closeModal={handleCloseResetModal}
+                         onBackClicked={handleBackToForgotPassword} onNextStep={handleShowNSuccessCard} />
+            <ForgotPassword isOpen={showForgotModal} closeModal={handleCloseForgotModal} onBackClicked={handleBackToLogin}
+                            onNextStep={handleShowEmailOTP}/>
+            <EmailOTP numberOfDigits={5} isOpen={showOTPModal} closeModal={handleCloseOTPModal}
+                onBackClicked={handleBackToForgotPassword} onNextStep={handleShowNewPassword}/>
             <SuccessCard 
                 title={"Password reset successful!"} 
                 description={"Your request to reset your password is completed. Proceed to login with your new password."} 
                 btnText={"Log in"} 
                 modalId={"password-reset-success-modal"}
+                isOpen={showSuccessCard} closeModal={handleCloseSuccessCard}
+                onNextStep={handleShowNewPassword}
             />
         </div>
     );
