@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, {useRef, useState} from 'react';
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,17 +11,37 @@ import 'react-datepicker/dist/react-datepicker.css';
 // Custom components
 import Button1 from '@/components/items/Button1'
 import {useRouter} from "next/navigation";
+import {usePlacesWidget} from "react-google-autocomplete";
 // import isMobile from '@/components/helpers/isMobile'
 
 const AirportSearchBox = ({data}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
+  const [toLocation, setToLocation] = useState('');
 
   const router = useRouter()
+  // const ref = useRef()
 
   console.log("Path name: ", router)
 
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
+
+    const { ref, autocompleteRef } = usePlacesWidget({
+        apiKey:"AIzaSyDcpqQNbjIQasjqRriOGOYnnSQdAGOUvVs",
+        onPlaceSelected: (place) => {
+            // console.log(place);
+            // console.log('locality: ',place?.address_components?.find(el => el?.types?.includes('locality')))
+            // console.log('State in country: ',place?.address_components?.find(el => el?.types?.includes('administrative_area_level_1')))
+            // console.log('Country: ',place?.address_components?.find(el => el?.types?.includes('country')))
+            // setLocality(place?.address_components?.find(el => el?.types?.includes('locality'))?.long_name)
+            // setStateInCountry(place?.address_components?.find(el => el?.types?.includes('administrative_area_level_1'))?.long_name)
+            // setCountry(place?.address_components?.find(el => el?.types?.includes('country'))?.long_name)
+            setToLocation(place?.formatted_address)
+        },
+        options: {
+            types: ["geocode", "establishment",],
+        }
+    });
 
     return (
         <div className="flex flex-col justify-center items-center -space-y-3">
@@ -59,7 +79,7 @@ const AirportSearchBox = ({data}) => {
                                     <Image src="/assets/images/map-pin.png" alt="" width={20} height={20} />
                                     <div className="w-full">
                                         <p className="mb-1 text-xs tz-text-gray-2">Pick-up location</p>
-                                        <input type="text" className="text-base self-stretch p-0 w-full outline-none border-0 focus:ring-0 placeholder-[#C8CCD0] tz-text-gray-5" placeholder="Enter location" />
+                                        <input ref={ref} value={toLocation} onChange={e => setToLocation(e.target.value)} type="text" className="text-base self-stretch p-0 w-full outline-none border-0 focus:ring-0 placeholder-[#C8CCD0] tz-text-gray-5" placeholder="Enter location" />
                                     </div>
                                 </div>
                             </div>
