@@ -6,9 +6,13 @@ import Link from "next/link";
 
 // Custom components
 import FaqsItem from '@/components/items/FaqsItem';
+import {useRouter} from "next/navigation";
+import {ANDROID_DOWNLOAD_LINK} from "../../public/assets/constants/constants";
 // import isMobile from '@/components/helpers/isMobile'
 
 const Footer = () => {
+
+    const router = useRouter()
 
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
@@ -20,7 +24,7 @@ const Footer = () => {
                     <div className="text-base font-medium tz-text-dark-2">Your journey starts here, get the app</div>
                     <div className="flex gap-1">
                         <Image src="/assets/images/appstore-icon.png" alt="need-support" width={110} height={33} /> 
-                        <Image src="/assets/images/google-play-icon.png" alt="need-support" width={110} height={33} /> 
+                        <Image className='cursor-pointer' onClick={() => router?.push(ANDROID_DOWNLOAD_LINK)} src="/assets/images/google-play-icon.png" alt="need-support" width={110} height={33} />
                     </div>
                 </div>
             </div>

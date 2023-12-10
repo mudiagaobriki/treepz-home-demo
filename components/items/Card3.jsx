@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import {ANDROID_DOWNLOAD_LINK} from "../../public/assets/constants/constants";
 
 // Custom components
 // import isMobile from '@/components/helpers/isMobile'
@@ -20,7 +21,7 @@ const Card3 = ({image, title, description, width, height=160}) => {
                 <div className="flex flex-col items-start gap-4">
                     <p className="text-lg font-medium text-white self-stretch">Explore without limits. Find your next ride.</p>
                     <div>
-                        <Link href="" className="flex justify-center items-center py-2 px-6 w-64 rounded-xl tz-bg-orange-1">Download the app</Link>
+                        <Link href={ANDROID_DOWNLOAD_LINK} className="flex justify-center items-center py-2 px-6 w-64 rounded-xl tz-bg-orange-1">Download the app</Link>
                     </div>
                 </div>
             </div>

@@ -39,7 +39,7 @@ const BlogSection = () => {
                     <BlogCard1 image={DATA[0].image} title={DATA[0].title} description={DATA[0].description} />
                 </div>
                 <div>
-                    <Link href="" className="flex items-center self-stretch py-4 px-60 rounded-lg tz-border-dark-1">Read our blog</Link>
+                    <Link href="" className="flex items-center self-stretch mt-24 py-4 px-60 rounded-lg tz-border-dark-1">Read our blog</Link>
                 </div>
             </div>
         </div>

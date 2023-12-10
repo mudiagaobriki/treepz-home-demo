@@ -1,66 +1,140 @@
 'use client';
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Image from "next/image";
 import Link from "next/link";
 
 // Custom components
 import CarCard from '@/components/items/CarCard';
 import Card3 from '@/components/items/Card3';
+import {fetchVehicleListing} from "../../services/dataservices/vehicleService";
+import {isMobile} from "react-device-detect";
+import {
+    setAllVehicleListings,
+    setFilterResult,
+    setSelectedRide,
+    setVehiclesListing
+} from "../../redux/features/marketplaceSlice";
+import {useDispatch} from "react-redux";
+import {useRouter} from "next/navigation";
+import {Spinner} from "flowbite-react";
 // import isMobile from '@/components/helpers/isMobile'
 
-const DATA = [
-    {
-        key: 1,
-        image: '/assets/images/carRental.png',
-        title: "Affordable car rental in seconds",
-        description: 'Treepz is also budget-friendly, with a wide selection' +
-            ' of vehicles at competitive prices. Plus, we offer promos and discounts' +
-            ' to make it even more affordable.',
-        width: 240,
-    },
-    {
-        key: 2,
-        image: "/assets/images/multipleCarIcons.png",
-        title: "One search, multiple options",
-        description: 'It takes 2 to 5 days to get a vehicle rented from initial search to pickup.' +
-            ' We are building Treepz to make vehicle rental as easy as clicking a button.',
-        width: 250,
-    },
-    {
-        key: 3,
-        image: "/assets/images/weightScale.png",
-        title: "Flexible booking policy",
-        description: 'We aggregate vehicles from different partners, giving you access to different' +
-            ' range of vehicles. So, you never have to settle again for limited options.',
-        width: 162,
-    },
-    {
-        key: 4,
-        image: "/assets/images/weightScale.png",
-        title: "Flexible booking policy",
-        description: 'We aggregate vehicles from different partners, giving you access to different' +
-            ' range of vehicles. So, you never have to settle again for limited options.',
-        width: 162,
-    },
-]
 
-const FeaturedCars = () => {
+const FeaturedCars = ({fetching=true, carsData=[]}) => {
+    const [data, setData] = useState(carsData);
+    const [loading, setLoading] = useState(fetching);
+
+    useEffect(() => {
+        setData(carsData)
+    },[carsData])
+
+    useEffect(() => {
+        setLoading(fetching)
+    }, [fetching]);
+
+    // const { vehicles, isLoading, isError } = fetchVehicleListing();
+    // console.log({vehicles, isLoading, isError});
+    //
+    const dispatch = useDispatch();
+    const router = useRouter();
+    //
+    // useEffect(() => {
+    //     // add condition to make it load only if vehicle data is empty
+    //     console.log("Use effect called")
+    //
+    //     // if (isLoading) return <Spinner/>
+    //     // add available filter
+    //     // add filter for intercity or rental or airport transfer
+    //
+    //     // restructure the fetched data to get the keys we need
+    //     if (!isLoading){
+    //         console.log("Loading---")
+    //         let data = vehicles?.data;
+    //         // dispatch(setAllVehicleListings(data));
+    //         data = data?.map(({id,currencySymbol,driveType,pricePerDay,vehicle,vehicleId,isAvailable,
+    //                               pricePerHour, pricePerMonth, pricePerWeek, halfDayPrice,availableTimes}) =>
+    //             ({id,currencySymbol,driveType,pricePerDay,vehicle,vehicleId,isAvailable,
+    //                 pricePerHour, pricePerMonth, pricePerWeek, halfDayPrice,availableTimes}))
+    //
+    //         setVehiclesData(data); // actual
+    //         // setVehiclesData(FEATURED_CARS); // dummy data
+    //         // dispatch(setVehiclesListing(data)) // actual
+    //         // dispatch(setVehiclesListing(FEATURED_CARS)) // dummy data
+    //         // dispatch(setFilterResult(data)) // actual
+    //         // dispatch(setFilterResult(FEATURED_CARS)) // dummy data
+    //         // console.log({FEATURED_CARS})
+    //         setFetching(false)
+    //         console.log({data})
+    //     }
+    //
+    // },[isLoading])
+
+    // useEffect(() => {
+    //     console.log({vehiclesData})
+    // }, [vehiclesData]);
+
+    const cardClicked = async (item) => {
+        dispatch(setSelectedRide(item));
+        // localStorage.setItem("selected", JSON.stringify(item))
+        await router.push("/vehicle-details")
+    }
 
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
-    return (
-        <div className='flex items-center gap-6 w-30 tz-px-30'>
-            {
-                DATA.map((item, index) => {
-                    return <div key={item?.key}>
-                            <CarCard />
+    if (data?.length === 0){
+        return <Spinner />
+    }
+
+
+    return data?.length !== 0 ? (
+        <>
+            <div className='flex items-center gap-6 w-30 tz-px-30'>
+                {/*<h1>Length of vehicles; {Array.from(vehiclesData).length}</h1>*/}
+                {
+                    data?.slice(0,3)?.map((item, index) => {
+                        return <div key={index} style={{cursor: 'pointer'}}>
+                            <CarCard
+                                onClick={() => cardClicked(item)}
+                                carImage={item?.vehicle?.vehicleImages}
+                                carName={item.vehicle?.vehicleMake?.name + " " + item?.vehicle?.vehicleModel?.name}
+                                location={item.location}
+                                hasAC={item.vehicle?.vehicleHasAirCondition}
+                                hasWifi={item.hasWifi}
+                                hasDisabledSeat={item.hasDisabledSeat}
+                                isChauffeured={item?.driveType === "chaffeured"}
+                                isPromoted={item.isPromoted}
+                                isSelfDrive={item.isSelfDrive}
+                                isRareFind={item.isRareFind}
+                                rating={item.rating}
+                                numSeats={item?.vehicle?.vehicleSittingCapacity}
+                                price={Number(item.pricePerDay).toLocaleString()}
+                                tripsCount={item.trips}
+                                // carName={item.carName}
+                                // carImage={item.image}
+                                // location={item.location}
+                                // hasAC={item.hasAC}
+                                // hasWifi={item.hasWifi}
+                                // hasDisabledSeat={item.hasDisabledSeat}
+                                // isChauffeured={item.isChauffeured}
+                                // isPromoted={item.isPromoted}
+                                // isSelfDrive={item.isSelfDrive}
+                                // isRareFind={item.isRareFind}
+                                // rating={item.rating}
+                                // numSeats={item.seats}
+                                // price={item.price}
+                                // tripsCount={item.trips}
+                            />
                         </div>
-                })
-            }
-            <Card3 />
-        </div>
-    );
+                    })
+                }
+                <Card3 />
+            </div>
+        </>
+
+    ): <Spinner />
+
+
 };
 
 export default FeaturedCars;

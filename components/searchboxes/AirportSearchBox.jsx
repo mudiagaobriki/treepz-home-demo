@@ -10,11 +10,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 // Custom components
 import Button1 from '@/components/items/Button1'
+import {useRouter} from "next/navigation";
 // import isMobile from '@/components/helpers/isMobile'
 
-const AirportSearchBox = () => {
+const AirportSearchBox = ({data}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
+
+  const router = useRouter()
 
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
@@ -25,9 +28,9 @@ const AirportSearchBox = () => {
                     <Image src="/assets/images/plane-fill.png" alt="" width={20} height={20} />
                     <span className="tz-text-dark">Airport transfers</span>
                 </Link>
-                <Link href="/home" className="flex items-center gap-2 px-3 py-2 rounded-3xl">
-                    <Image src="/assets/images/car-light.png" alt="" width={20} height={20} />
-                    <span className="text-white">Vehicle rentals</span>
+                <Link href="/market-place" className="flex items-center gap-2 px-3 py-2 rounded-3xl">
+                    <Image onClick={() => router.push('/market-place')} src="/assets/images/car-light.png" alt="" width={20} height={20} />
+                    <span onClick={() => router.push('/market-place')} className="text-white">Vehicle rentals</span>
                 </Link>
                 <Link href="/inter-city-travels" className="flex items-center gap-2 px-3 py-2 rounded-3xl">
                     <Image src="/assets/images/car-light.png" alt="" width={20} height={20} />

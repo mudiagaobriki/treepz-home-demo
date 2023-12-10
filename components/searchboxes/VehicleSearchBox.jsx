@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import Autocomplete, {usePlacesWidget} from "react-google-autocomplete";
 
 // Third party component
 import DatePicker from 'react-datepicker';
@@ -14,6 +15,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {setFilterResult, setVehiclesListing} from "../../redux/features/marketplaceSlice";
 import {fetchVehicleListing} from "../../services/dataservices/vehicleService";
 import {searchRentals} from "../../services/functions/filters";
+import {useRouter} from "next/navigation";
 // import isMobile from '@/components/helpers/isMobile'
 
 const VehicleSearchBox = ({data,marketPlace=false}) => {
@@ -22,9 +24,13 @@ const VehicleSearchBox = ({data,marketPlace=false}) => {
   const [selectedDropDate, setSelectedDropDate] = useState(new Date());
   const [selectedDropTime, setSelectedDropTime] = useState(new Date());
   const [toLocation, setToLocation] = useState('');
+  const [locality, setLocality] = useState('');
+  const [stateInCountry, setStateInCountry] = useState('');
+  const [country, setCountry] = useState('');
   // const [listingsData, setToLocation] = useState('');
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
@@ -45,26 +51,57 @@ const VehicleSearchBox = ({data,marketPlace=false}) => {
         const availableRides = data?.filter(el => (el?.isAvailable === true));
         console.log({availableRides})
         // const carsInLocation = data?.filter(el => el?.locationKeywords?.includes(toLocation?.toLowerCase()))
-        const searchResults = searchRentals(availableRides,formattedDate)
+        let searchResults
+        if (toLocation === ""){
+            searchResults = searchRentals(availableRides,formattedDate,'','','',false)
+        }
+        else{
+            // console.log("Searching here")
+            // console.log({formattedDate,locality,stateInCountry,country})
+            searchResults = searchRentals(availableRides,formattedDate,locality,stateInCountry,country)
+        }
+
         console.log({searchResults})
         dispatch(setFilterResult(searchResults));
+        console.log({toLocation})
+
+        if (!marketPlace){
+            router.push(`/market-place?location=${toLocation}&pickup=${selectedPickDate}&dropoff=${selectedDropDate}`)
+        }
     }
+
+    const { ref, autocompleteRef } = usePlacesWidget({
+        apiKey:"AIzaSyDcpqQNbjIQasjqRriOGOYnnSQdAGOUvVs",
+        onPlaceSelected: (place) => {
+            console.log(place);
+            console.log('locality: ',place?.address_components?.find(el => el?.types?.includes('locality')))
+            console.log('State in country: ',place?.address_components?.find(el => el?.types?.includes('administrative_area_level_1')))
+            console.log('Country: ',place?.address_components?.find(el => el?.types?.includes('country')))
+            setLocality(place?.address_components?.find(el => el?.types?.includes('locality'))?.long_name)
+            setStateInCountry(place?.address_components?.find(el => el?.types?.includes('administrative_area_level_1'))?.long_name)
+            setCountry(place?.address_components?.find(el => el?.types?.includes('country'))?.long_name)
+            setToLocation(place?.formatted_address)
+        },
+        options: {
+            types: ["geocode", "establishment",],
+        }
+    });
 
     return (
         <div className={`flex flex-col justify-center items-center ${!marketPlace && '-space-y-3'}`}>
             {!marketPlace && <div className="flex items-center gap-3 px-3 py-2 rounded-[3.75rem] tz-searchbox-buttons">
-                            <a href="/airport-transfers" className="flex items-center gap-2 px-3 py-2 rounded-3xl">
+                            <Link href="/airport-transfers" className="flex items-center gap-2 px-3 py-2 rounded-3xl">
                                 <Image src="/assets/images/plane-light.png" alt="" width={20} height={20} />
                                 <span className="text-white">Airport transfers</span>
-                            </a>
-                            <a href="" className="flex items-center gap-2 px-3 py-2 rounded-3xl bg-white">
+                            </Link>
+                            <Link href="" className="flex items-center gap-2 px-3 py-2 rounded-3xl bg-white">
                                 <Image src="/assets/images/car.png" alt="" width={20} height={20} />
                                 <span className="tz-text-dark">Vehicle rentals</span>
-                            </a>
-                            <a href="/inter-city-travels" className="flex items-center gap-2 px-3 py-2 rounded-3xl">
+                            </Link>
+                            <Link href="/inter-city-travels" className="flex items-center gap-2 px-3 py-2 rounded-3xl">
                                 <Image src="/assets/images/car-light.png" alt="" width={20} height={20} />
                                 <span className="text-white">Inter-city travels</span>
-                            </a>
+                            </Link>
                         </div>}
             <div className="flex flex-col items-start gap-4 rounded-2xl bg-white pt-6 pb-5 px-5">
                 <div className="flex items-center gap-4 self-stretch w-full">
@@ -73,7 +110,7 @@ const VehicleSearchBox = ({data,marketPlace=false}) => {
                             <Image src="/assets/images/map-pin.png" alt="" width={20} height={20} />
                             <div className="w-full">
                                 <p className="mb-1 text-xs tz-text-gray-2">Where are you going?</p>
-                                <input value={toLocation} onChange={e => setToLocation(e.target.value)} type="text" className="text-base self-stretch p-0 w-full outline-none border-0 focus:ring-0 placeholder-[#C8CCD0] tz-text-gray-5" placeholder="City, airport, address or hotel" />
+                                <input ref={ref} value={toLocation} onChange={e => setToLocation(e.target.value)} type="text" className="text-base self-stretch p-0 w-full outline-none border-0 focus:ring-0 placeholder-[#C8CCD0] tz-text-gray-5" placeholder="City, airport, address or hotel" />
                             </div>
                         </div>
                     </div>

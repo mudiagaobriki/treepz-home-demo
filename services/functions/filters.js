@@ -267,8 +267,10 @@ export const multipleFilter = (cardsData,filter) => {
     return result;
 }
 
-export function searchRentals(cardsData,pickupTime){
-    return cardsData?.filter(el => el?.availableTimes?.includes(pickupTime))
+export function searchRentals(cardsData,pickupTime,locality='',state='',country='',hasLocation=true){
+    return hasLocation? cardsData?.filter(el => (el?.availableTimes?.includes(pickupTime) && el?.locationKeywords?.includes(country?.toLowerCase()) &&
+        (el?.locationKeywords?.includes(locality?.toLowerCase()) || el?.locationKeywords?.includes(state?.toLowerCase())))):
+        cardsData?.filter(el => (el?.availableTimes?.includes(pickupTime)))
 }
 
 // Example usage:

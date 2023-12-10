@@ -5210,20 +5210,20 @@ const CarGridShow = () => {
         if (vehicles === undefined){
             let data = vehicles?.data;
             dispatch(setAllVehicleListings(data));
-            data = data?.map(({id,currencySymbol,driveType,pricePerDay,vehicle,vehicleId,isAvailable,
+            data = data?.map(({id,currencySymbol,locationKeywords,driveType,pricePerDay,vehicle,vehicleId,isAvailable,
                                   pricePerHour, pricePerMonth, pricePerWeek, halfDayPrice,availableTimes}) =>
-                ({id,currencySymbol,driveType,pricePerDay,vehicle,vehicleId,isAvailable,
+                ({id,currencySymbol,locationKeywords,driveType,pricePerDay,vehicle,vehicleId,isAvailable,
                     pricePerHour, pricePerMonth, pricePerWeek, halfDayPrice,availableTimes}))
 
             setCompleteData(data);
-            // setVehiclesData(data); // actual
-            setVehiclesData(FEATURED_CARS); // dummy data
-            // dispatch(setVehiclesListing(data)) // actual
-            dispatch(setVehiclesListing(FEATURED_CARS)) // dummy data
-            // dispatch(setFilterResult(data)) // actual
-            dispatch(setFilterResult(FEATURED_CARS)) // dummy data
-            console.log({FEATURED_CARS})
-            // console.log({data})
+            setVehiclesData(data); // actual
+            // setVehiclesData(FEATURED_CARS); // dummy data
+            dispatch(setVehiclesListing(data)) // actual
+            // dispatch(setVehiclesListing(FEATURED_CARS)) // dummy data
+            dispatch(setFilterResult(data)) // actual
+            // dispatch(setFilterResult(FEATURED_CARS)) // dummy data
+            // console.log({FEATURED_CARS})
+            console.log({data})
         }
 
     },[isLoading,router])

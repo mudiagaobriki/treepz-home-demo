@@ -11,6 +11,7 @@ import ReferAndEarn from '@/components/sections/ReferAndEarn';
 import FeaturedCars from '@/components/sections/FeaturedCars';
 import CommonQuestions from '@/components/sections/CommonQuestions';
 import Footer from '@/components/sections/Footer';
+import CarGridShow from "../../components/sections/CarGridShow";
 
 const Page = () => {
 
@@ -18,6 +19,9 @@ const Page = () => {
         <div>
             <NavBar bgColor="#FFF" />
             <HeroBanner bgImg={"/assets/images/airport-hero-section.png"} page="airport-transfers" />
+            <div style={{marginTop: -100,marginBottom: 50}}>
+                <CarGridShow />
+            </div>
             <div className="my-20 absolute"></div>
             <NeverSettle />
             <div className="my-20"></div>
@@ -27,7 +31,7 @@ const Page = () => {
                 image={"/assets/images/rafiki.png"} width={205} height={152} 
             />
             <div className="my-20"></div>
-            <FeaturedCars />
+            {/*<FeaturedCars />*/}
             <div className="my-20"></div>
             <CommonQuestions />
             <div className="my-20"></div>

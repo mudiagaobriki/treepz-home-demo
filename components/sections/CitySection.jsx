@@ -32,7 +32,12 @@ const DATA = [
     {
         key: 5,
         image: "/assets/images/destination/abuja.png",
-        city: "Abujah"
+        city: "Abuja"
+    },
+    {
+        key: 6,
+        image: "/assets/images/destination/abuja.png",
+        city: "Dubai"
     },
 ]
 

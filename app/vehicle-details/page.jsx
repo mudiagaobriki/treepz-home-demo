@@ -27,6 +27,7 @@ import {BASE_URL} from "../../public/assets/constants/constants";
 import axios from "axios";
 import {setCurrentUser} from "../../redux/features/authSlice";
 import VehicleImage from "../../components/sections/VehicleImage";
+import ReviewReservation from "../../components/modals/ReviewReservation";
 
 const Page = () => {
         const [userLocation, setUserLocation] = useState(null)
@@ -38,6 +39,11 @@ const Page = () => {
         const [showSuccessCard, setShowSuccessCard] = useState(false)
         const [carImages, setCarImages] = useState([])
         const [hasReservationError, setHasReservationError] = useState(false)
+        const [priceCalculated, setPriceCalculated] = useState("")
+        const [priceCalculatedLocal, setPriceCalculatedLocal] = useState("")
+        const [priceShown, setPriceShown] = useState(false)
+        const [bookingId, setBookingId] = useState("")
+        const [showReviewReservation, setShowReviewReservation] = useState(false)
 
         const dispatch = useDispatch()
         const router = useRouter();
@@ -160,6 +166,11 @@ const Page = () => {
                 setShowSuccessCard(true)
         }
 
+        const handleCloseReviewReservation = () => {
+                setShowReviewReservation(false)
+                // setShowSuccessCard(true)
+        }
+
         const InitiateBooking = async (pt,dt,lc, vid) => {
                 const credentials = {
                         listedVehicleId: vid,
@@ -181,7 +192,9 @@ const Page = () => {
                         const res = await axios.post(url, credentials, {headers})
 
                         console.log({res})
-                        if (res?.status === 200) {
+                        if (res?.status === 200 || res?.status === 201) {
+                                setBookingId(res?.data?.data?.id)
+                                await GetPricing(res?.data?.data?.id)
                                 // const currentUser = res?.data?.data?.user;
                                 // console.log({currentUser})
                                 // const token = res?.data?.data?.jwt;
@@ -195,14 +208,14 @@ const Page = () => {
                 }
         }
 
-        const GetPricing = async () => {
+        const GetPricing = async (orderId) => {
                 const credentials = {
                         isPreview: true
                 }
 
                 console.log({credentials})
                 // console.log({profileImage: profileImageUrl})
-                const url = `${BASE_URL}/order/bc207831-79f8-49f0-b2ed-3562f45123a0/payment`
+                const url = `${BASE_URL}/order/${orderId}/payment`
 
                 try {
                         const headers = {
@@ -212,7 +225,12 @@ const Page = () => {
                         const res = await axios.patch(url, credentials, {headers})
 
                         console.log({res})
-                        if (res?.status === 200) {
+                        if (res?.status === 200 || res?.status === 201) {
+                                setPriceCalculated(res?.data?.data?.amount)
+                                console.log("Amount: ", res?.data?.data?.amount)
+                                setPriceCalculatedLocal(res?.data?.data?.amountInLocalCurrency)
+                                setPriceShown(true)
+
                                 // const currentUser = res?.data?.data?.user;
                                 // console.log({currentUser})
                                 // const token = res?.data?.data?.jwt;
@@ -222,8 +240,75 @@ const Page = () => {
                         }
                 } catch (ex) {
                         console.log({ex})
-                        alert("Invalid credentials. Please try again")
+                        // alert("Invalid credentials. Please try again")
                 }
+        }
+
+        const DirectBooking = async (orderId) => {
+                const credentials = {
+                        isPreview: true
+                }
+
+                console.log({credentials,orderId})
+                // console.log({profileImage: profileImageUrl})
+                const url = `${BASE_URL}/order/${orderId}/direct`
+
+                try {
+                        const headers = {
+                                Authorization: `Bearer ${token?.token}`,
+                        }
+
+                        const res = await axios.patch(url, credentials, {headers})
+
+                        console.log({res})
+                        if (res?.status === 200 || res?.status === 201) {
+                                setShowReviewReservation(true)
+                                // setPriceCalculated(res?.data?.data?.amount)
+                                // console.log("Amount: ", res?.data?.data?.amount)
+                                // setPriceCalculatedLocal(res?.data?.data?.amountInLocalCurrency)
+                                // setPriceShown(true)
+                        }
+                } catch (ex) {
+                        console.log({ex})
+                        setShowReviewReservation(true)
+                        // alert("Invalid credentials. Please try again")
+                }
+        }
+
+        const CheckBooking = async (orderId) => {
+                const credentials = {
+
+                }
+
+                console.log({credentials,orderId})
+                // console.log({profileImage: profileImageUrl})
+                const url = `${BASE_URL}/order/${orderId}`
+
+                try {
+                        const headers = {
+                                Authorization: `Bearer ${token?.token}`,
+                        }
+
+                        const res = await axios.patch(url, credentials, {headers})
+
+                        console.log("Booking status: ",{res})
+                        if (res?.status === 200 || res?.status === 201) {
+                                setShowReviewReservation(true)
+                                // setPriceCalculated(res?.data?.data?.amount)
+                                // console.log("Amount: ", res?.data?.data?.amount)
+                                // setPriceCalculatedLocal(res?.data?.data?.amountInLocalCurrency)
+                                // setPriceShown(true)
+                        }
+                } catch (ex) {
+                        console.log({ex})
+                        setShowReviewReservation(true)
+                        // alert("Invalid credentials. Please try again")
+                }
+        }
+
+        const handleBookOrder = async () => {
+                await CheckBooking(bookingId)
+                await DirectBooking(bookingId)
         }
 
     return (
@@ -274,10 +359,11 @@ const Page = () => {
             <VehicleImage images={carImages} />
             <div className="my-20"></div>
                 {selectedRide && <BookingDetails description={selectedRide?.vehicle?.vehicleGuideLine}
-                            amenities={selectedRide?.vehicle?.vehicleAmenities}
-                onReserve={actualHandleReserveClicked} ride={selectedRide}/>}
+                            amenities={selectedRide?.vehicle?.vehicleAmenities} price={priceCalculated}
+                onReserve={actualHandleReserveClicked} ride={selectedRide} localPrice={priceCalculatedLocal}
+                priceShown={priceShown} onBook={handleBookOrder} />}
             <div className="my-20"></div>
-            <MapSection ride={selectedRide} />
+            {/*<MapSection ride={selectedRide} />*/}
             <div className="mt-24 pt-16 pb-10 tz-bg-light">
                 <BreadCrumb links={["Rent a car", "Ikejah", "Mercedes", "Mercedes Mayback 20233"]} />
             </div>
@@ -301,6 +387,7 @@ const Page = () => {
                 isOpen={showSuccessCard} closeModal={handleCloseSuccessCard}
                 onNextStep={handleShowNewPassword}
             />
+            <ReviewReservation show={showReviewReservation} hideModal={handleCloseReviewReservation} />
         </div>
     );
 };

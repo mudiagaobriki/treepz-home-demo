@@ -19,7 +19,7 @@ const GetStartedSection = () => {
                         <p className="text-base self-stretch tz-text-gray">Far or near, there’s a vehicle for your next trip</p>
                     </div>
                     <div>
-                        <Button1 text="Get started" url="#" />
+                        <Button1 text="Get started" url="/market-place" />
                     </div>
                 </div>
                 <div>

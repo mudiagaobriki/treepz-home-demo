@@ -8,17 +8,18 @@ import Link from "next/link";
 import VehicleSearchBox from '@/components/searchboxes/VehicleSearchBox'
 import AirportSearchBox from '@/components/searchboxes/AirportSearchBox'
 import IntercitySearchBox from '@/components/searchboxes/IntercitySearchBox'
+import {useDispatch} from "react-redux";
 // import isMobile from '@/components/helpers/isMobile'
 
-const HeroBanner = ({bgImg, page}) => {
+const HeroBanner = ({data, bgImg, page='vehicle-rentals'}) => {
 
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
     return (
         <div className="w-full">
             <div className={`flex items-center justify-center w-full h-[32.5rem] self-stretch bg-cover bg-center ${bgImg}`}> 
-                {page == 'vehicle-rentals' && <VehicleSearchBox />}
-                {page == 'airport-transfers' && <AirportSearchBox />}
+                {page == 'vehicle-rentals' && <VehicleSearchBox data={data} />}
+                {page == 'airport-transfers' && <AirportSearchBox data={data} />}
                 {page == 'intercity-travels' && <IntercitySearchBox />}
             </div>
                 

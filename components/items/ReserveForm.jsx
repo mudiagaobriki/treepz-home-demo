@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import Autocomplete, {usePlacesWidget} from "react-google-autocomplete";
@@ -11,7 +11,7 @@ import Button1 from '@/components/items/Button1';
 import DatePicker from "react-datepicker";
 // import isMobile from '@/components/helpers/isMobile'
 
-const ReserveForm = ({onReserve, ride, hasError, price, localPrice}) => {
+const ReserveForm = ({onReserve, onBook, ride, hasError, price="", localPrice="",pricesShown=false}) => {
     const [error, setError] = useState(false);
     const [errorText, setErrorText] = useState('The owner is not available for pickup on that day.');
     const [selectedPickDate, setSelectedPickDate] = useState(new Date());
@@ -19,6 +19,22 @@ const ReserveForm = ({onReserve, ride, hasError, price, localPrice}) => {
     const [selectedDropDate, setSelectedDropDate] = useState(new Date());
     const [selectedDropTime, setSelectedDropTime] = useState(new Date());
     const [toLocation, setToLocation] = useState('');
+    const [showPrices, setShowPrices] = useState(false);
+    const [standardPrice, setStandardPrice] = useState(price);
+    const [priceInLocalCurrency, setPriceInLocalCurrency] = useState(localPrice);
+
+    useEffect(() => {
+        console.log({pricesShown})
+        setShowPrices(pricesShown)
+    }, [pricesShown]);
+
+    useEffect(() => {
+        setStandardPrice(price)
+    }, [price]);
+
+    useEffect(() => {
+        setPriceInLocalCurrency(localPrice)
+    }, [localPrice]);
 
     const handleReserveClicked = () => {
         console.log({toLocation})
@@ -73,6 +89,10 @@ const ReserveForm = ({onReserve, ride, hasError, price, localPrice}) => {
         types: ["geocode", "establishment",],
     }
     });
+
+    const locationSelected = (loc) => {
+        setToLocation(loc);
+    }
 
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3"; // h-[32.5rem]
 
@@ -158,31 +178,31 @@ const ReserveForm = ({onReserve, ride, hasError, price, localPrice}) => {
                     {/*        console.log(place);*/}
                     {/*    }}*/}
                     {/*/>;*/}
-                    <input onChange={el => setToLocation(el?.target?.value)} ref={ref} className="w-full outline-none border-0 p-0 focus:ring-0 focus:border-0 tz-text-gray-2" type="text" name="" placeholder="Enter pick-up location" />
+                    <input onBlur={handleReserveClicked} onChange={el => locationSelected(el?.target?.value)} ref={ref} className="w-full outline-none border-0 p-0 focus:ring-0 focus:border-0 tz-text-gray-2" type="text" name="" placeholder="Enter pick-up location" />
                 </div>
                 {error && <div className="flex items-center gap-2 mb-5">
                     <Image src="/assets/images/information-line.png" alt="info-line" width={20} height={20} />
                     <p className="text-xs font-light tz-text-red">{errorText}</p>
                 </div>}
                 <div className="w-full mb-6">
-                    <Button1 onClick={handleReserveClicked} text="Reserve" submit={true} />
+                    <Button1 onClick={onBook} text="Reserve" submit={true} />
                 </div>
-                <div className="w-full tz-border-top-1">
+                {pricesShown && <div className="w-full tz-border-top-1">
                     <div className="flex items-center justify-between w-full mb-3 mt-5">
                         <div>
                             <span className="font-m border-0edium tz-text-gray-3">Total&nbsp;</span>
                             <span className="text-xs tz-text-gray-3">(incl. of tax)</span>
                         </div>
-                        <div className="font-medium tz-text-dark">₦44,000</div>
+                        <div className="font-medium tz-text-dark">₦ {Number(standardPrice)?.toLocaleString()}</div>
                     </div>
                     <div className="flex items-center justify-between w-full">
                         <div>
                             <span className="font-m border-0edium tz-text-gray-3">Total in GHC&nbsp;</span>
                             <span className="text-xs tz-text-gray-3">(incl. of tax)</span>
                         </div>
-                        <div className="font-medium tz-text-dark">GHC4,400</div>
+                        <div className="font-medium tz-text-dark">GHC {Number(priceInLocalCurrency)?.toLocaleString()}</div>
                     </div>
-                </div>
+                </div>}
             </div>
             <div className="flex flex-col items-center p-4 w-96 bg-white rounded-xl mb-7 tz-shadow tz-border-light-2">
                 <p className="text-xs font-medium tz-text-gray-50 mb-3 self-stretch">CANCELLATION POLICY</p>

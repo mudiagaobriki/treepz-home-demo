@@ -7,13 +7,19 @@ import Link from "next/link";
 // Custom components
 import Button1 from '@/components/items/Button1';
 import Button2 from '@/components/items/Button2';
+import {Modal} from "flowbite-react";
 // import isMobile from '@/components/helpers/isMobile'
 
-const TripReservation = () => {
+const TripReservation = ({show, hideModal}) => {
     
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
     return (
+        <Modal size="xl" show={show} onClick={() => hideModal()} >
+            <Modal.Header>
+                <h4 className="font-medium tz-text-dark-1">Host has accepted trip</h4>
+            </Modal.Header>
+            <Modal.Body>
         <div>
             {/* Main modal */}
             <div id="trip-reservation-modal" tabindex="-1" aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -65,6 +71,8 @@ const TripReservation = () => {
                 </div>
             </div> 
         </div>
+            </Modal.Body>
+        </Modal>
     );
 };
 

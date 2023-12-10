@@ -31,7 +31,7 @@ const Community = () => {
                     </div>
                 </div>
                 <div>
-                    <Link href="" className="flex py-3 px-4 w-52 justify-center items-center rounded-lg tz-border-dark">
+                    <Link href="/how-treepz-works" className="flex py-3 px-4 w-52 justify-center items-center rounded-lg tz-border-dark">
                         See how it works
                     </Link>
                 </div>
