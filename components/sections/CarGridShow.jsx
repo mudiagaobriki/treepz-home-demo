@@ -5144,7 +5144,7 @@ const FEATURED_CARS = [
     }
 ]
 
-const CarGridShow = () => {
+const CarGridShow = ({isAirportTransfer = false}) => {
     const seat = useRef();
     const progressRef = useRef(null);
     const [completeData, setCompleteData] = useState([]);
@@ -5207,8 +5207,11 @@ const CarGridShow = () => {
         // add filter for intercity or rental or airport transfer
 
         // restructure the fetched data to get the keys we need
-        if (vehicles === undefined){
+        // if (vehicles === undefined){
             let data = vehicles?.data;
+            if (isAirportTransfer){
+                data = data?.filter(el => el?.airportTransfer === true)
+            }
             dispatch(setAllVehicleListings(data));
             data = data?.map(({id,currencySymbol,locationKeywords,driveType,pricePerDay,vehicle,vehicleId,isAvailable,
                                   pricePerHour, pricePerMonth, pricePerWeek, halfDayPrice,availableTimes}) =>
@@ -5224,7 +5227,7 @@ const CarGridShow = () => {
             // dispatch(setFilterResult(FEATURED_CARS)) // dummy data
             // console.log({FEATURED_CARS})
             console.log({data})
-        }
+        // }
 
     },[isLoading,router])
 

@@ -20,7 +20,7 @@ const Page = () => {
             <NavBar bgColor="#FFF" />
             <HeroBanner bgImg={"/assets/images/airport-hero-section.png"} page="airport-transfers" />
             <div style={{marginTop: -100,marginBottom: 50}}>
-                <CarGridShow />
+                <CarGridShow isAirportTransfer={true} />
             </div>
             <div className="my-20 absolute"></div>
             <NeverSettle />

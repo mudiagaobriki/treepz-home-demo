@@ -19,6 +19,8 @@ const AirportSearchBox = ({data}) => {
 
   const router = useRouter()
 
+  console.log("Path name: ", router)
+
     // let mobPad = isMobile ? "px-5 py-2" : "px-20 py-3";
 
     return (
